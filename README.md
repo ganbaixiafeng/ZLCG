@@ -21,7 +21,7 @@ After ensuring PyTorch is installed correctly, you can install the other depende
 ````
 pip install -r requirements.txt
 ````
-ST-Balance mainly depends on the Python scientific stack.
+ZLCG mainly depends on the Python scientific stack.
 ````
 easy-torch==1.3.2
 easydict==1.10
@@ -44,28 +44,8 @@ umap-learn==0.5.3
 ````
 ## Installation Guide
 ````
-git clone https://github.com/ST-Balance/ST-Balance.git 
+git clone https://github.com/ganbaixiafeng/ZLCG.git
 ````
-* It takes about two minutes.
-## Demo
-
-We provide one of the smallest datasets, PEMS08, as a demo, which is located in the `PEMS/datasets` folder. Enter the `PEMS` directory and run `demo.sh`. Other datasets need to be decompressed or downloaded before they can be used.
-
-* Linux
-
-  * ````shell
-    sh demo.sh
-    ````
-
-* Windows
-
-  * ```shell
-    python train.py -c config/PEMS08.py
-    ```
-
-    
-
-We have placed our own training logs in the checkpoints directory as a reference. The estimated training time is 104 minutes.
 
 ## Reproduction of Baseline Methods
 
@@ -78,11 +58,8 @@ Traffic Flow:
 Meteorology:
 * We use the original authors' publicly available code [Corrformer](https://github.com/thuml/Corrformer) as the experimental baseline.
 
-Epidemics:
-* The raw data originates from [CSSE](https://github.com/CSSEGISandData/COVID-19) and is processed within the BasicTS framework (see the Covid19 folder). We also use the [STSGT](https://github.com/soumbane/STSGT), [SAB‑GNN](https://github.com/JiaweiXue/MultiwaveCovidPrediction) and [EpiLearn](https://github.com/Emory-Melody/EpiLearn/tree/main/epilearn/models/SpatialTemporal) as the experimental baseline.
-
 ## Dataset
-Except for the epidemic dataset, the raw and processed data can be accessed through the links above. Additionally, all processed datasets are available at this [link](https://drive.google.com/drive/folders/11xEsQldS-MmVpq8VzIg9HEEhvCUQ7-QV).
+the raw and processed data can be accessed through the links above. Additionally, all processed datasets are available at this [link](https://drive.google.com/drive/folders/11xEsQldS-MmVpq8VzIg9HEEhvCUQ7-QV).
 
 ## FOR PEMS Dataset
 ### Folder Structure
@@ -102,10 +79,7 @@ Example:
 ````shell
 python train.py -c config/PEMS08.py --gpus '0'
 ````
-#### Testing
-````shell
-python experiments/train.py -c config/${CONFIG_NAME}.py --ckpt ${CHECKPOINT_PATH}.pt --gpus '0'
-````
+
 ## For LargeST Dataset
 
 ### Folder Structure
@@ -119,62 +93,29 @@ Once the dataset has been downloaded and placed in the LargeST folder, all opera
 
 #### Training
 ````shell
-python main.py --dataset ${DATA_SET_NAME} --mode 'train' --model_name STBalance
+python main.py --dataset ${DATA_SET_NAME} --bs 32 --model_name ZLCG --node_dim 512 --virtual_edge_q 80
 ````
-Example:
-````shell
-python main.py --dataset SD --mode 'train' --model_name STBalance
-````
-Note: Parameter configurations can be viewed in main.py and config/ST-Balance.yaml. Hyperparameter configurations are available in src/utils/args.py.
 
-#### Testing
-````shell
-python main.py --dataset ${DATA_SET_NAME} --mode 'test' --model_name STBalance
-````
 Example:
 ````shell
-python main.py --dataset SD --mode 'test' --model_name STBalance
+python main.py --dataset SD --bs 32 --model_name ZLCG --node_dim 512 --virtual_edge_q 80
 ````
+Note: Parameter configurations can be viewed in main.py and config/ZLCG.yaml. Hyperparameter configurations are available in src/utils/args.py.
+
 ## For Meteorology Dataset
 
 ### Folder Structure
 ````shell
 -Meteorology
   -dataset
-  -adj_ang.npy
+   -global_temp
+   -global_wind
 ````
 ### Operations
 Once the dataset has been downloaded and placed in the Meteorology folder, all operations should be conducted within this folder. [DataLink](https://drive.google.com/file/d/1TG8VQGuvhGErIkNUU7JYvJIULtiLwWGs/view?usp=drive_link) 
 
 #### Training
 ````shell
-python run.py --is_training 1 --data Global_Wind --root_path ./dataset/global_wind/ --pos_filename ./dataset/global_wind/ --model_id 0 --des Exp --itr 1
+python run.py --model ZLCG --data Global_Temp --root_path ./dataset/global_temp/ --node_dim 512 --adj_n_components 512 --adj_virtual_q 95
 ````
 Note: Parameter configurations can be viewed in run.py.
-
-#### Testing
-````shell
-python run.py --is_training 0 --data Global_Wind --root_path ./dataset/global_wind/ --pos_filename ./dataset/global_wind/ --model_id 0 --des Exp --itr 1
-````
-## FOR Covid19 Dataset
-### Folder Structure
-````shell
--Covid19
-  -datasets 
-    -Covid19_US
-````
-### Operations
-Once the dataset has been downloaded and placed in the Covid19 folder, all operations should be conducted within this folder. [DataLink](https://drive.google.com/file/d/16PGCd2C4tgU5PbMeQXOSITx5cm-gRkRd/view?usp=drive_link) 
-
-#### Training
-````shell
-python train.py -c config/${CONFIG_NAME}.py --gpus '0'
-````
-Example:
-````shell
-python train.py -c config/Covid19_US.py --gpus '0'
-````
-#### Testing
-````shell
-python experiments/train.py -c config/${CONFIG_NAME}.py --ckpt ${CHECKPOINT_PATH}.pt --gpus '0'
-````

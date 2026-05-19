@@ -73,11 +73,11 @@ Once the dataset has been downloaded and placed in the PEMS folder, all operatio
 
 #### Training
 ````shell
-python train.py -c config/${CONFIG_NAME}.py --gpus '0'
+python train.py -c baselines/${CONFIG_NAME}.py --gpus '0'
 ````
 Example:
 ````shell
-python train.py -c config/PEMS08.py --gpus '0'
+python train.py -c baselines/PEMS08.py --gpus '0'
 ````
 
 ## For LargeST Dataset
